@@ -1,166 +1,76 @@
-🎨 Text2Image Diffusion Engine
+# Text-to-Image Generation Project
 
-A Text-to-Image generation system powered by Stable Diffusion that converts natural language prompts into high-quality images.
-The project provides both a Command Line Interface (CLI) and an interactive Streamlit Web UI with automatic hardware optimization and fast generation support.
+This project allows you to generate images from text prompts using the Stable Diffusion model. It provides both a Command Line Interface (CLI) and a Web User Interface (Streamlit).
 
-🚀 Features
+## Features
 
-- 🧠 Text-to-Image generation using Stable Diffusion
-- ⚡ Fast Mode (LCM) for faster CPU inference
-- 💻 Command Line Interface (CLI)
-- 🌐 Streamlit Web Interface
-- 🎛️ Fully customizable generation parameters
-- 🔍 Automatic device detection (CUDA / MPS / CPU)
-- 🎯 Seed support for reproducible results
-- 🚫 Negative prompt support
-- 💾 Automatic image saving
+- **Text-to-Image Generation**: Convert natural language prompts into high-quality images.
+- **Customizable Parameters**:
+    - **Guidance Scale**: Controls how closely the image follows the prompt.
+    - **Inference Steps**: Higher steps generally mean better quality but slower generation.
+    - **Image Size**: Adjustable width and height.
+    - **Number of Images**: Generate multiple images at once.
+    - **Seed**: Use a specific seed for reproducible results.
+    - **Negative Prompts**: Specify what you *don't* want in the image.
+- **Automatic Device Detection**: Automatically uses GPU (CUDA/MPS) if available, otherwise falls back to CPU with memory optimizations.
+- **Two Interfaces**: CLI for quick usage and Streamlit for an interactive experience.
 
-📁 Project Structure
+## Prerequisites
 
-├── main.py                # CLI entry point
-├── streamlit_app.py       # Streamlit Web UI
-├── model_loader.py        # Model loading & device optimization
-├── image_generator.py     # Image generation logic
-├── download_model.py      # Model downloader
-├── test_installation.py   # Environment verification
-├── test_lcm.py            # Fast mode testing
-├── requirements.txt       # Dependencies
-└── outputs/               # Generated images
+- Python 3.8 or higher.
+- A GPU with at least 4GB VRAM is recommended for reasonable performance.
+- CPU generation is supported but will be significantly slower.
 
-⚙️ Installation
+## Installation
 
-📥 Clone Repository
+1.  **Clone the repository** (or download the files).
+2.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```
-git clone https://github.com/your-username/text2image-diffusion-engine.git
-cd text2image-diffusion-engine
-```
-📦 Install Dependencies
+## Usage
 
-```
-pip install -r requirements.txt
-```
+### 1. Command Line Interface (CLI)
 
----
+Run `main.py` to generate images from the terminal.
 
-✅ Verify Installation (Optional)
-
-```
-python test_installation.py
+**Basic Usage:**
+```bash
+python main.py "A futuristic cylinder city in the clouds"
 ```
 
----
-
-🖥️ Usage
-
-▶️ Command Line Interface (CLI)
-
-Basic usage:
-
-```
-python main.py "A futuristic city in the clouds"
+**Advanced Usage:**
+```bash
+python main.py "A futuristic city" --negative_prompt "blurry, low quality" --steps 30 --guidance_scale 8.0 --width 512 --height 512 --num_images 2
 ```
 
-Advanced usage:
+### 2. Streamlit Web Interface
 
-```
-python main.py "Cyberpunk city at night" --negative_prompt "blurry, low quality" --steps 30 --guidance_scale 8.0 --width 512 --height 512 --num_images 2
-```
+Run the Streamlit app for an interactive UI.
 
----
-
-🌐 Streamlit Web Interface
-
-Run the web application:
-
-```
+```bash
 streamlit run streamlit_app.py
 ```
+This will open a new tab in your web browser where you can enter prompts and adjust parameters using sliders.
 
-Then open the browser and generate images interactively.
+## Project Structure
 
----
+- `main.py`: Entry point for the CLI.
+- `streamlit_app.py`: Entry point for the Streamlit web app.
+- `model_loader.py`: Handles loading the Stable Diffusion model and device optimization.
+- `image_generator.py`: Contains the logic for generating and saving images.
+- `outputs/`: Generated images are saved here automatically.
+- `requirements.txt`: List of Python dependencies.
 
-⚡ Fast Mode (LCM)
+## How it Works
 
-Fast Mode significantly reduces generation time, especially on CPU devices.
+This project uses **Stable Diffusion**, a latent diffusion model.
+1.  **Text Encoding**: Your text prompt is converted into a numerical representation (embeddings) using a text encoder (CLIP).
+2.  **Diffusion Process**: The model starts with random noise and iteratively "denoises" it, guided by the text embeddings, to form a coherent image.
+3.  **Decoding**: The final latent representation is decoded into a visible image.
 
-Enable Fast Mode:
+## Troubleshooting
 
-```
-python main.py "A fantasy landscape" --fast
-```
-
-Typical settings:
-- ⚡ Steps: 4 to 8
-- 🎯 Guidance Scale: 1.0
-
----
-🎛️ Parameters
-
-- 📝 Prompt — Text description of the image
-- 🚫 Negative Prompt — Elements to avoid
-- ⏱️ Inference Steps — Controls quality vs speed
-- 🎯 Guidance Scale — Prompt adherence strength
-- 🖼️ Image Size — Width and height
-- 🔁 Seed — Reproducible outputs
-- 🧩 Number of Images — Batch generation
-
----
-
-🧠 How It Works
-
-1. Text prompt is converted into embeddings using a text encoder.
-2. Stable Diffusion starts from random noise.
-3. The diffusion process iteratively denoises guided by the prompt.
-4. The final latent representation is decoded into an image.
-
----
-
-💻 Requirements
-
-- Python 3.8 or higher
-- Recommended GPU with at least 4GB VRAM
-- CPU generation supported (slower but optimized)
-
----
-
-📦 Dependencies
-
-- torch
-- diffusers
-- transformers
-- accelerate
-- streamlit
-- Pillow
-- peft
-
-Install automatically:
-
-```
-pip install -r requirements.txt
-```
-
----
-
-📸 Output
-
-Generated images are automatically saved inside:
-
-```
-outputs/
-```
-
----
-
-🛠️ Troubleshooting
-
-Out of Memory:
-- Reduce image size (256x256)
-- Generate fewer images
-- Use Fast Mode
-
-Slow Generation:
-- CPU inference is slower
-- Use GPU if available
-
+- **Out of Memory (OOM)**: If you run out of GPU memory, the code automatically tries to enable attention slicing. If that's not enough, try generating smaller images (e.g., 256x256) or reducing the batch size.
+- **Slow Generation**: On CPU, generation is expected to be slow (minutes per image). Use a GPU for faster results.

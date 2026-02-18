@@ -1,0 +1,7 @@
+torch
+diffusers>=0.23.0
+transformers
+accelerate
+streamlit
+Pillow
+peft
