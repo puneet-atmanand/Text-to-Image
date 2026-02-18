@@ -1,4 +1,5 @@
 🎨 Text2Image Diffusion Engine
+
 A Text-to-Image generation system powered by Stable Diffusion that converts natural language prompts into high-quality images.
 The project provides both a Command Line Interface (CLI) and an interactive Streamlit Web UI with automatic hardware optimization and fast generation support.
 
